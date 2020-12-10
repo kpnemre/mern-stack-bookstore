@@ -4,6 +4,8 @@ const app = express();
 const connectDB = require("./models/connectDB.js")
 const router = require("./routes/router");
 connectDB();
+
+app.use(express.json());
 app.use("/api", router);
 
 app.listen(5000, () => {
