@@ -1,12 +1,11 @@
 const express = require("express");
-// express().listen(5000);
+require("dotenv").config();
+const app = express();
+const connectDB = require("./models/connectDB.js")
+const router = require("./routes/router");
+connectDB();
+app.use("/api", router);
 
-
-const app =express();
-const router = require ("./routes/router")
-// app.use("/",router)
-app.use("/api",router)
-
-app.listen((5000), ()=>{
-    console.log("I am listening on port")
+app.listen(5000, () => {
+  console.log("I'm listening on port 5000");
 });
