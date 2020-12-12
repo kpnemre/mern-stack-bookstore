@@ -9,7 +9,7 @@ const connectDB = async()=>{
    await mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser:true, useUnifiedTopology:true});
    console.log("db connection success")   
     } catch (error) {
-        console.log("error connectimg DB", error)
+        console.log("error connecting DB", error)
     }
 
 
