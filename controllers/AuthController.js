@@ -11,7 +11,7 @@ exports.authRegister = async (req, res) => {
   if (validationError.errors.length > 0) {
     return res.status(400).json({ error: validationError.array() });
   }
-  console.log(validationError);
+  // console.log(validationError);
 
   // ------------
 
@@ -25,9 +25,11 @@ exports.authRegister = async (req, res) => {
   // -----------------------------------------------------
   // -------------todo2: check already registered----------
   const userData = await User.findOne({ email }); // aynı olan emaili bul tüm bilgileri getir.email:email şeklinde olanı kısaltarak email yazdık
-  console.log(userData);
+  // console.log(userData);
   if (userData) {
-    return res.status(400).json({ error: [{ message: "user already exist" }] }); // error formatında atmak gerek. json formatında
+    return res
+      .status(400)
+      .json({ errors: [{ message: "user already exist" }] }); // error formatında atmak gerek. json formatında
     // return res.json("user already exist")
     // response u bitirdik
   }
@@ -54,27 +56,28 @@ exports.authRegister = async (req, res) => {
 
 exports.authLogin = async (req, res) => {
   const { email, password } = req.body;
-  const validationError = validationResult(req);
 
   // ---------TODO  1: field validation-------------
+  const validationError = validationResult(req);
+
   if (validationError.errors.length > 0) {
-    return res.status(400).json({ error: validationError.array() });
+    return res.status(400).json({ errors: validationError.array() });
   }
-  console.log(validationError);
+  // console.log(validationError);
   res.send("Login Completed");
 
   // ------------------TODO  2:user exist?-----------------
 
   const userData = await User.findOne({ email });
-  console.log(userData);
+  // console.log(userData);
   if (!userData) {
     return res
       .status(400)
-      .json({ error: [{ message: "user does not exist" }] }); // error formatında atmak gerek.
+      .json({ errors: [{ message: "user does not exist" }] }); // error formatında atmak gerek.
   }
   // ------------------------- TODO  3: password compare----------------
 
-  console.log(userData);
+  // console.log(userData);
 
   const isPasswordMatch = await bcrypt.compare(password, userData.password);
   if (!isPasswordMatch) {
@@ -87,11 +90,13 @@ exports.authLogin = async (req, res) => {
   jwt.sign(
     { userData },
     process.env.JWT_SECRET_KEY,
-    { expiresIn: "1h" },
+    { expiresIn: 3600 },
     (err, token) => {
       if (err) {
         return res.status(400).json({ error: [{ message: "unknown error" }] }); // error formatında atmak gerek.
       }
+      console.log(token);
+      // my token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJfaWQiOiI1ZmQ1MDg5NGI5ZjY0MTE1YzhkOWE0YzgiLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJlbWFpbCI6ImFAYS5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRCTlRVZTh2b010Znp0NlhnaHJTYjEuckZ5ZWhPY3FrTUpVL3pTbXZUbVkzd0REQjROcmdNcSIsInJlZ2lzdGVyRGF0ZSI6IjIwMjAtMTItMTJUMTg6MTQ6NDQuNzIwWiIsIl9fdiI6MH0sImlhdCI6MTYwNzc5NzQwMiwiZXhwIjoxNjA3ODAxMDAyfQ.xe5wqsq-87IekK7qo-fXdZo8OnfnBjTs0eMD8X0_g78
       res.send(token);
     }
   );
