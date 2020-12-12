@@ -1,31 +1,17 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
-
+var jwt = require("jsonwebtoken");
 exports.authRegister = async (req, res) => {
-  //TODO: Register func.
-  // req.body.firstName
-
-  // console.log(req)
   const { firstName, lastName, email, password } = req.body;
-  // expres.json middleware sayesinde
-
-  // todo1: validate the fields
-  // todo2: check already registered
-  // todo3: crpyt password
-  // todo4: save the user DB
 
   // ---------  // todo1: validate the fields----------
 
-  // console.log(check1)
-  const validationError =validationResult(req);
-  if (validationError.errors.length >0) {
-    return res
-    .status(400)
-    .json({ error: validationError.array() })
-
+  const validationError = validationResult(req);
+  if (validationError.errors.length > 0) {
+    return res.status(400).json({ error: validationError.array() });
   }
-  console.log(validationError)
+  console.log(validationError);
 
   // ------------
 
@@ -48,7 +34,6 @@ exports.authRegister = async (req, res) => {
 
   // -------------------------------------------------------
 
-
   const user = new User({
     firstName,
     lastName,
@@ -62,10 +47,54 @@ exports.authRegister = async (req, res) => {
   res.send("Register Completed.");
 };
 
-exports.authLogin = (req, res) => {
-  // TODO: Auth.
-  // TODO: Login func.
+// TODO  1: field validation
+// TODO  2:user exist?
+// TODO  3: password compare
+// TODO  4: authentication return TOKEN=> JWT(JSON  WEB   TOKEN)
+
+exports.authLogin = async (req, res) => {
+  const { email, password } = req.body;
+  const validationError = validationResult(req);
+
+  // ---------TODO  1: field validation-------------
+  if (validationError.errors.length > 0) {
+    return res.status(400).json({ error: validationError.array() });
+  }
+  console.log(validationError);
   res.send("Login Completed");
+
+  // ------------------TODO  2:user exist?-----------------
+
+  const userData = await User.findOne({ email });
+  console.log(userData);
+  if (!userData) {
+    return res
+      .status(400)
+      .json({ error: [{ message: "user does not exist" }] }); // error formatında atmak gerek.
+  }
+  // ------------------------- TODO  3: password compare----------------
+
+  console.log(userData);
+
+  const isPasswordMatch = await bcrypt.compare(password, userData.password);
+  if (!isPasswordMatch) {
+    return res
+      .status(400)
+      .json({ error: [{ message: "invalid credentials" }] }); // error formatında atmak gerek.
+  }
+
+  // ------------------TODO  4: authentication return TOKEN=> JWT(JSON  WEB   TOKEN)-------------
+  jwt.sign(
+    { userData },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: "1h" },
+    (err, token) => {
+      if (err) {
+        return res.status(400).json({ error: [{ message: "unknown error" }] }); // error formatında atmak gerek.
+      }
+      res.send(token);
+    }
+  );
 };
 
 //   {
