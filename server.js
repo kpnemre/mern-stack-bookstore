@@ -16,6 +16,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // const port = process.env.PORT || 5000;
-app.listen(5000, () => {
-  console.log(`I'm listening on port `);
+
+
+app.listen(process.env.PORT || 5000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
