@@ -9,7 +9,6 @@ exports.getBookList = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-
 exports.getBookDetails = async (req, res) => {
   try {
     const BookDetails = await Book.findOne({
