@@ -1,11 +1,13 @@
-import { Button } from 'antd';
-import './App.css';
+import "./App.css";
+import AppRouter from "./Router/Router";
+import AuthContextProvider from "./context/AuthContext";
+import { Layout} from "antd";
 
 function App() {
   return (
-    <div className="App">
-     <Button type="primary">TEST BUTTON</Button>
-    </div>
+    <Layout className="layout">
+      <AppRouter />
+    </Layout>
   );
 }
 
