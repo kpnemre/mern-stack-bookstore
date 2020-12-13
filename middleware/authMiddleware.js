@@ -14,12 +14,12 @@ if (!token) {
 
 // console.log(token)
 jwt. verify(token, process.env.JWT_SECRET_KEY, (err,decodedtoken)=>{
-    console.log(decodedtoken)
+   
 if(err){
     return res.status(401).json({message: "ınvalid token"}) 
 }else {
     req.decodedUser=decodedtoken.userData;
-    next();
+    next();// geçiş izni
 }
 })
 

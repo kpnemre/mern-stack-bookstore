@@ -11,27 +11,20 @@ exports.authRegister = async (req, res) => {
   if (validationError.errors.length > 0) {
     return res.status(400).json({ error: validationError.array() });
   }
-  // console.log(validationError);
 
   // ------------
 
   // ------ todo3: crpyt password-------Password Kriptoloma yapıldı
   const salt = await bcrypt.genSalt(10);
-  // sonuç promise olduğu için await ekliyoruz
-  // bcrypt.hash(password, bcrypt.genSalt(10))
+
   const newPassword = await bcrypt.hash(password, salt);
-  // console.log(newPassword);
-  // console.log(salt);
-  // -----------------------------------------------------
+
   // -------------todo2: check already registered----------
-  const userData = await User.findOne({ email }); // aynı olan emaili bul tüm bilgileri getir.email:email şeklinde olanı kısaltarak email yazdık
-  // console.log(userData);
+  const userData = await User.findOne({ email }); 
   if (userData) {
     return res
       .status(400)
-      .json({ errors: [{ message: "user already exist" }] }); // error formatında atmak gerek. json formatında
-    // return res.json("user already exist")
-    // response u bitirdik
+      .json({ errors: [{ message: "user already exist" }] }); 
   }
 
   // -------------------------------------------------------
@@ -42,7 +35,7 @@ exports.authRegister = async (req, res) => {
     email: email,
     password: newPassword, // crypted password
   });
-  // user.save();
+
   await user.save();
 
   // TODO:ERROR HANDLING FOR SAVING
@@ -63,13 +56,13 @@ exports.authLogin = async (req, res) => {
   if (validationError.errors.length > 0) {
     return res.status(400).json({ errors: validationError.array() });
   }
-  // console.log(validationError);
+
   res.send("Login Completed");
 
   // ------------------TODO  2:user exist?-----------------
 
   const userData = await User.findOne({ email });
-  // console.log(userData);
+
   if (!userData) {
     return res
       .status(400)
@@ -77,7 +70,7 @@ exports.authLogin = async (req, res) => {
   }
   // ------------------------- TODO  3: password compare----------------
 
-  // console.log(userData);
+
 
   const isPasswordMatch = await bcrypt.compare(password, userData.password);
   if (!isPasswordMatch) {
