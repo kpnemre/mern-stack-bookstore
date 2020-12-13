@@ -96,8 +96,7 @@ exports.authLogin = async (req, res) => {
         return res.status(400).json({ error: [{ message: "unknown error" }] }); // error formatında atmak gerek.
       }
       console.log(token);
-      // my token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJfaWQiOiI1ZmQ1MDg5NGI5ZjY0MTE1YzhkOWE0YzgiLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJlbWFpbCI6ImFAYS5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRCTlRVZTh2b010Znp0NlhnaHJTYjEuckZ5ZWhPY3FrTUpVL3pTbXZUbVkzd0REQjROcmdNcSIsInJlZ2lzdGVyRGF0ZSI6IjIwMjAtMTItMTJUMTg6MTQ6NDQuNzIwWiIsIl9fdiI6MH0sImlhdCI6MTYwNzc5NzQwMiwiZXhwIjoxNjA3ODAxMDAyfQ.xe5wqsq-87IekK7qo-fXdZo8OnfnBjTs0eMD8X0_g78
-      res.send(token);
+      res.status(202).json({ token });
     }
   );
 };
