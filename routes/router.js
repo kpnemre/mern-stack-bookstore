@@ -1,13 +1,13 @@
 const express = require("express");
 
 const router = express.Router();
-// const AuthRouter = require("./AuthRouter");
-// const BookRouter = require("./BookRouter");
-// const ProfileRouter =require("./ProfileRouter");
-router.get("/", (req,res)=>{
-    console.log("home page")
-    res.send("home page")
-})
+const AuthRouter = require("./AuthRouter");
+const BookRouter = require("./BookRouter");
+const ProfileRouter =require("./ProfileRouter");
+// router.get("/", (req,res)=>{
+//     console.log("home page")
+//     res.send("home page")
+// })
 // ONLY /api ENDPOINT  
 // sadece /api ile başlayan kısımlara routing hizmeti verecek. / home kısmı statik
 // http://localhost:5000/ ulaşım sağlamıyor şu hali ile
@@ -23,13 +23,17 @@ router.get("/", (req,res)=>{
 // })
 
 
-// router.use("/auth", AuthRouter);
+router.use("/auth", AuthRouter);
 
 /**
  * @route /api/profile
  * @desc Route for Profile
  */
 // router.use("/profile", ProfileRouter);
+router.get("/profile", (req,res)=>{
+        console.log("API page")
+        res.send("API page")
+    })
 
 
 /**
